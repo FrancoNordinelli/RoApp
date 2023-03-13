@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -55,26 +56,29 @@ public class MainActivity extends AppCompatActivity {
         //Función para agregar oraciones al vector oraciones, según los vectores posXOraciones, posYOraciones
         agregarOracion();
 
+        MediaPlayer mp = MediaPlayer.create(this, R.raw.camapanas2);
+
         rosario.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if(motionEvent.getAction() == motionEvent.ACTION_DOWN){
-                    nuevaOracion(copy, contRezos);
-                    contRezos++;
-                }
+
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent){
+
+                        if (motionEvent.getAction() == motionEvent.ACTION_DOWN && contRezos<59) {
+                            nuevaOracion(copy, contRezos);
+                            mp.start();
+                            contRezos++;
+                        }
+
+
             return true;
             }
         });
 
 
-
-
-        //Función que colorea rezo actual
-        //nuevaOracion(copy);
-
     }
 
 
+    //Colorea rezo actual
     public void nuevaOracion(Bitmap copy, int cont){
 
         Oraciones orar = oraciones.get(cont);
