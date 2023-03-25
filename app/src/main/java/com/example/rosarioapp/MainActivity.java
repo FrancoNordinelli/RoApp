@@ -7,18 +7,23 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import frases.database.FrasesBiblicaDBHelper;
 
 public class MainActivity extends AppCompatActivity {
 
     //---------------ATRIBUTOS-------------
 
     ImageView rosario;
-
+    TextView frase;
     Bitmap rosarioBitmap;
     Bitmap copy;
 
@@ -41,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
 
     int contRezos = 0;
 
+    //Base de datos
+    FrasesBiblicaDBHelper db = new FrasesBiblicaDBHelper(this);
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         rosario = (ImageView) findViewById(R.id.rosario);
+        frase = (TextView) findViewById((R.id.textView_frase));
         // Obtener el bitmap de la imagen actual en la ImageView
         rosarioBitmap = ((BitmapDrawable) rosario.getDrawable()).getBitmap();
         //copy permite cambiar imagen del mapa de bit
@@ -57,17 +67,34 @@ public class MainActivity extends AppCompatActivity {
         agregarOracion();
 
         MediaPlayer mp = MediaPlayer.create(this, R.raw.camapanas2);
+        MediaPlayer mp1 = MediaPlayer.create(this, R.raw.campanas1);
+
+        db.agregarFrasesPredeterminadas(this);
 
         rosario.setOnTouchListener(new View.OnTouchListener() {
 
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent){
 
-                        if (motionEvent.getAction() == motionEvent.ACTION_DOWN && contRezos<59) {
+                    //TODO: CAMBIAR CAMPANA SEGUN EL TURNO
+                    if(contRezos<59) {
+                        if (motionEvent.getAction() == motionEvent.ACTION_DOWN && (contRezos!=9||contRezos!=19||contRezos!=29||
+                                contRezos!=39||contRezos!=49)) {
                             nuevaOracion(copy, contRezos);
                             mp.start();
                             contRezos++;
+                        }else if(motionEvent.getAction() == motionEvent.ACTION_DOWN){
+                            mp1.start();
+                            contRezos++;
                         }
+
+                    }
+                    if(contRezos == 59){
+                        String fraseS = db.obtenerFraseAleatoria();
+                        frase.setText(fraseS);
+                        frase.setVisibility(View.VISIBLE);
+                        Log.d("FRASES","Frase--->" + fraseS);
+                    }
 
 
             return true;

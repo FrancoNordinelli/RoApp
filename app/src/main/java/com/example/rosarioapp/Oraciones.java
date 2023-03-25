@@ -1,5 +1,6 @@
 package com.example.rosarioapp;
 
+//Esta clase corresponde a cada pelotita del rosario
 public class Oraciones {
 
     int posX;
