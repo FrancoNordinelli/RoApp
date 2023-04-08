@@ -76,18 +76,18 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent){
 
-                    //TODO: CAMBIAR CAMPANA SEGUN EL TURNO
-                    if(contRezos<59) {
-                        if (motionEvent.getAction() == motionEvent.ACTION_DOWN && (contRezos!=9||contRezos!=19||contRezos!=29||
-                                contRezos!=39||contRezos!=49)) {
-                            nuevaOracion(copy, contRezos);
-                            mp.start();
-                            contRezos++;
-                        }else if(motionEvent.getAction() == motionEvent.ACTION_DOWN){
-                            mp1.start();
-                            contRezos++;
-                        }
 
+                    if (!mp.isPlaying() && !mp1.isPlaying() && contRezos < 59) {
+                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                            if (contRezos != 10 && contRezos != 20 && contRezos != 30 && contRezos != 40 && contRezos != 50) {
+                                nuevaOracion(copy, contRezos);
+                                mp.start();
+                                contRezos++;
+                            } else {
+                                mp1.start();
+                                contRezos++;
+                            }
+                        }
                     }
                     if(contRezos == 59){
                         String fraseS = db.obtenerFraseAleatoria();
